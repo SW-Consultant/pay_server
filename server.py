@@ -48,5 +48,8 @@ def create_payment():
     return jsonify({"payment_url": approve_link})
 
 if __name__ == "__main__":
+    import os
+    # Получаем порт из переменной окружения Railway, по умолчанию 5000
     port = int(os.environ.get("PORT", 5000))
+    # Слушаем все сетевые интерфейсы
     app.run(host="0.0.0.0", port=port)
