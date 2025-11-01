@@ -15,7 +15,7 @@ def create_payment():
     amount = data.get("amount", "5.00")
     description = data.get("description", "Тестовая подписка")
 
-    # Получаем токен
+    # Получаем токен Sandbox
     token_resp = requests.post(
         f"{PAYPAL_API_BASE}/v1/oauth2/token",
         auth=HTTPBasicAuth(PAYPAL_CLIENT_ID, PAYPAL_SECRET),
@@ -42,8 +42,4 @@ def create_payment():
     payment_data = payment_resp.json()
 
     approve_link = next(link["href"] for link in payment_data["links"] if link["rel"] == "approve")
-    return jsonify({"payment_url": approve_link})
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    return jsonify({"payment_url": approve_link})
