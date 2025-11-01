@@ -3,7 +3,7 @@ import requests
 from requests.auth import HTTPBasicAuth
 import os
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 # --- Настройки PayPal Sandbox ---
 PAYPAL_CLIENT_ID = os.getenv("PAYPAL_SANDBOX_CLIENT_ID")
