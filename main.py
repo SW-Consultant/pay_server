@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from config import PAYPAL_CLIENT_ID, PAYPAL_SECRET
 from utils import create_paypal_order
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 @app.route("/")
 def home():
@@ -23,5 +23,5 @@ def create_payment():
     else:
         return jsonify({"status": "error", "message": "Failed to create payment"}), 500
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
