@@ -1,2 +1,9 @@
-PAYPAL_CLIENT_ID = "AVKqlu_sC9lUqMkwAgtKt9mPfFwx9szqd73ACEX_Hv3RLc8lfs03mf30vbyuk9Pq7_v6V7VVa7_6yrNw"
-PAYPAL_SECRET = "EEOeZMU3LkoWRswuXmYprrj-xwSvezbyUB-dUO-Ee7wPJ0P7HTEy6gEHK7CEnGbclH1pEEWutTerr3Sz"
+import os
+
+# Секрет для проверки запросов от Albato
+SECRET_KEY = os.environ.get("SECRET_KEY", "your-secret-key")
+
+# PayPal sandbox credentials
+PAYPAL_CLIENT_ID = os.environ.get("PAYPAL_SANDBOX_CLIENT_ID")
+PAYPAL_SECRET = os.environ.get("PAYPAL_SANDBOX_SECRET")
+PAYPAL_MODE = os.environ.get("PAYPAL_MODE", "sandbox").lower()
