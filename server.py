@@ -5,19 +5,17 @@ import os
 
 app = Flask(__name__)
 
-# --- Настройки PayPal Sandbox ---
-PAYPAL_CLIENT_ID = os.getenv("PAYPAL_SANDBOX_CLIENT_ID")
-PAYPAL_SECRET = os.getenv("PAYPAL_SANDBOX_SECRET")
+PAYPAL_CLIENT_ID = os.environ.get("PAYPAL_SANDBOX_CLIENT_ID")
+PAYPAL_SECRET = os.environ.get("PAYPAL_SANDBOX_SECRET")
 PAYPAL_API_BASE = "https://api-m.sandbox.paypal.com"
 
-# --- Эндпоинт для создания платежа ---
 @app.route("/create-payment", methods=["POST"])
 def create_payment():
     data = request.json
-    amount = data.get("amount", "5.00")             
-    description = data.get("description", "Тестовая подписка")  
+    amount = data.get("amount", "5.00")
+    description = data.get("description", "Тестовая подписка")
 
-    # 1️⃣ Получаем токен Sandbox
+    # Получаем токен
     token_resp = requests.post(
         f"{PAYPAL_API_BASE}/v1/oauth2/token",
         auth=HTTPBasicAuth(PAYPAL_CLIENT_ID, PAYPAL_SECRET),
@@ -27,7 +25,7 @@ def create_payment():
     token_resp.raise_for_status()
     access_token = token_resp.json()["access_token"]
 
-    # 2️⃣ Создаем платеж (тестовый)
+    # Создаём заказ
     payment_resp = requests.post(
         f"{PAYPAL_API_BASE}/v2/checkout/orders",
         headers={"Content-Type": "application/json", "Authorization": f"Bearer {access_token}"},
@@ -43,13 +41,9 @@ def create_payment():
     payment_resp.raise_for_status()
     payment_data = payment_resp.json()
 
-    # 3️⃣ Извлекаем ссылку на оплату
     approve_link = next(link["href"] for link in payment_data["links"] if link["rel"] == "approve")
     return jsonify({"payment_url": approve_link})
 
 if __name__ == "__main__":
-    import os
-    # Получаем порт из переменной окружения Railway, по умолчанию 5000
     port = int(os.environ.get("PORT", 5000))
-    # Слушаем все сетевые интерфейсы
     app.run(host="0.0.0.0", port=port)
